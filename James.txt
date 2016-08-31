@@ -1,0 +1,4 @@
+toDoItem.text=Lesson plans
+toDoItem.isDone=true
+toDoItem.text=test
+toDoItem.isDone=true
