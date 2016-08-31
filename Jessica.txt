@@ -1,6 +1,0 @@
-toDoItem.text=test1
-toDoItem.isDone=false
-toDoItem.text=test2
-toDoItem.isDone=true
-toDoItem.text=testJessica
-toDoItem.isDone=true
