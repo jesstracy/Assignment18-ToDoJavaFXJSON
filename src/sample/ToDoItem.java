@@ -6,7 +6,10 @@ package sample;
 public class ToDoItem {
     String text;
     boolean isDone;
-    String owner;
+
+    public ToDoItem() {
+    }
+
 
     public ToDoItem(String text) {
         this.text = text;
@@ -20,11 +23,13 @@ public class ToDoItem {
 
     @Override
     public String toString() {
-        if (isDone) {
+        if (isDone()) {
             return text + " (done)";
         } else {
             return text;
         }
+
+
         // A one-line version of the logic above:
         // return text + (isDone ? " (done)" : "");
     }
@@ -45,13 +50,6 @@ public class ToDoItem {
         isDone = done;
     }
 
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
 }
 
 

@@ -26,108 +26,50 @@ public class Controller implements Initializable {
     @FXML
     TextField todoText;
 
-//    ObservableList<ToDoItem> todoItems = FXCollections.observableArrayList();
-
     ObservableList<ToDoItem> todoItems = FXCollections.observableArrayList();
     ToDoContainer myContainerInstance = new ToDoContainer();
 
-    private String currentUser = "Jessica";
+    private String currentUser;
 
-    String jsonString;
 
-    class ToDoContainer {
+    // Why static?? -> the restoredisk method could not see the constructor when it wasn't static/
+    private static class ToDoContainer {
 
-        ArrayList<ToDoItem> todoItemsArrayList = new ArrayList<ToDoItem>();
+        public ToDoContainer() {
 
-        public ArrayList<ToDoItem> getTodoItemsArrayList() {
-            return todoItemsArrayList;
         }
 
-        public void setTodoItemsArrayList(ArrayList<ToDoItem> todoItemsArrayList) {
-            this.todoItemsArrayList = todoItemsArrayList;
-        }
+        public ArrayList<ToDoItem> todoItemsArrayList = new ArrayList<ToDoItem>();
 
-        public void addToDoItem(ToDoItem item) {
-            todoItemsArrayList.add(item);
-        }
+//        public ArrayList<ToDoItem> getTodoItemsArrayList() {
+//            return todoItemsArrayList;
+//        }
+//
+//        public void setTodoItemsArrayList(ArrayList<ToDoItem> todoItemsArrayList) {
+//            this.todoItemsArrayList = todoItemsArrayList;
+//        }
+//
+//        public void addToDoItem(ToDoItem item) {
+//            todoItemsArrayList.add(item);
+//        }
     }
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        try {
-            // populate observable list with what we read in from file.
-//            populateToDoItemsFromFile();
-
-//        } catch (ClassNotFoundException exception) {
-//            exception.printStackTrace();
-//        } catch (IOException exception) {
-//            exception.printStackTrace();
-//        }
 
         Scanner myScanner = new Scanner(System.in);
         currentUser = askForUserName(myScanner);
 
+
         File userFile = new File(currentUser + ".json");
         if (userFile.exists()) {
-            try {
-//                ArrayList<ToDoItem> toDoItemsArrayList = new ArrayList<ToDoItem>();
-
-//                FileInputStream fis = new FileInputStream(userFile);
-//                ObjectInputStream objectIn = new ObjectInputStream(fis);
-//                toDoItemsArrayList = (ArrayList<ToDoItem>)objectIn.readObject();
-
-
-                // *****************************************************************************
-//                String jsonString = restoreTDContainer();
-//                myContainerInstance = jsonRestore(jsonString);
-                myContainerInstance = restoreTDContainer();
-                for (ToDoItem item : myContainerInstance.getTodoItemsArrayList()) {
-//                for (ToDoItem item : toDoItemsArrayList) {
-                    todoItems.add(item);
-                }
-                System.out.println(todoItems);
-                // ******************************************************************************
-//                FileReader myFileReader = new FileReader(userFile);
-//                String jsonLine = myFileReader.read();
-//                JsonParser toDoContainerParser = new JsonParser();
-//                ArrayList<ToDoItem> toDoItemsArrayList = toDoContainerParser.parse(jsonLine, ArrayList.class);
-//                System.out.println(toDoItemsArrayList);
-            } catch (IOException exception) {
-                exception.printStackTrace();
-            } catch (ClassNotFoundException exception) {
-                exception.printStackTrace();
-            }
+            readFromDisk();
         }
 
-//        User myUser = null;
-//        // check if already on list of users
-//        boolean alreadyUser = false;
-//        for (User user : users) {
-//            if (userName.equals(user.getUserName())) {
-//                myUser = user;
-//                System.out.println("Welcome back, " + userName + "!");
-//                alreadyUser = true;
-//                user.putUsersListInObservableFile();
-//            }
-//        }
-//        if (!alreadyUser) {
-//            System.out.println("Welcome new user!");
-//            myUser = new User(userName);
-//            users.add(myUser);
-//        }
-//        currentUser = userName;
         todoList.setItems(todoItems);
     }
 
-//    public void populateToDoItemsFromFile() {
-//        String jsonTD = restoreTDContainer();
-//        myContainerInstance = jsonRestore(jsonTD);
-//
-//        for (ToDoItem item : myContainerInstance.getTodoItemsArrayList()) {
-//            todoItems.add(item);
-//        }
-//    }
 
     public String askForUserName(Scanner myScanner) {
         System.out.print("What is your name? ");
@@ -142,119 +84,115 @@ public class Controller implements Initializable {
     }
 
     public void addItem() {
-//        try {
-            System.out.println("Adding item ...");
-            todoItems.add(new ToDoItem(todoText.getText()));
-            todoText.setText("");
-//            myContainerInstance.setTodoItemsArrayList((ArrayList<ToDoItem>)todoItems);
-            for (ToDoItem item : todoItems) {
-                myContainerInstance.addToDoItem(item);
-            }
-//            jsonSaveString = jsonSave(myContainerInstance);
-//            saveTDContainer(jsonSaveString);
-//            saveTDContainer(myContainerInstance);
-            writeFile();
-//        } catch (IOException exception) {
-//            exception.printStackTrace();
-//        }
+        System.out.println("Adding item ...");
+        todoItems.add(new ToDoItem(todoText.getText()));
+        todoText.setText("");
+
+        saveToDisk();
     }
 
     public void removeItem() {
-//        try {
-            ToDoItem todoItem = (ToDoItem) todoList.getSelectionModel().getSelectedItem();
-            System.out.println("Removing " + todoItem.text + " ...");
-            todoItems.remove(todoItem);
-            for (ToDoItem item : todoItems) {
-                myContainerInstance.addToDoItem(item);
-            }
-//            jsonSaveString = jsonSave(myContainerInstance);
-//            saveTDContainer(jsonSaveString);
-//            saveTDContainer(myContainerInstance);
-            writeFile();
-//        } catch (IOException exception) {
-//            exception.printStackTrace();
-//        }
+        ToDoItem todoItem = (ToDoItem) todoList.getSelectionModel().getSelectedItem();
+        System.out.println("Removing " + todoItem.text + " ...");
+        todoItems.remove(todoItem);
+
+        saveToDisk();
     }
 
     public void toggleItem() {
-//        try {
-            System.out.println("Toggling item ...");
-            ToDoItem todoItem = (ToDoItem) todoList.getSelectionModel().getSelectedItem();
-            if (todoItem != null) {
-                todoItem.isDone = !todoItem.isDone;
-                todoList.setItems(null);
-                todoList.setItems(todoItems);
-            }
-            for (ToDoItem item : todoItems) {
-                myContainerInstance.addToDoItem(item);
-            }
-//            jsonSaveString = jsonSave(myContainerInstance);
-//            saveTDContainer(jsonSaveString);
-//            saveTDContainer(myContainerInstance);
-            writeFile();
-//        } catch (IOException exception) {
-//            exception.printStackTrace();
-//        }
+        System.out.println("Toggling item ...");
+        ToDoItem todoItem = (ToDoItem) todoList.getSelectionModel().getSelectedItem();
+        if (todoItem != null) {
+            todoItem.isDone = !todoItem.isDone;
+            todoList.setItems(null);
+            todoList.setItems(todoItems);
+        }
+        saveToDisk();
     }
 
     public void markAllDone() {
-//        try {
-            System.out.println("Marking all items as \"done\"");
-            for (ToDoItem toDoItem : todoItems) {
-                toDoItem.isDone = true;
-            }
-            todoList.setItems(null);
-            todoList.setItems(todoItems);
-            for (ToDoItem item : todoItems) {
-                myContainerInstance.addToDoItem(item);
-            }
-//            jsonSaveString = jsonSave(myContainerInstance);
-//            saveTDContainer(jsonSaveString);
-//            saveTDContainer(myContainerInstance);
-            writeFile();
-//        } catch (IOException exception) {
-//            exception.printStackTrace();
-//        }
+        System.out.println("Marking all items as \"done\"");
+        for (ToDoItem toDoItem : todoItems) {
+            toDoItem.isDone = true;
+        }
+        todoList.setItems(null);
+        todoList.setItems(todoItems);
+
+        saveToDisk();
     }
 
     public void markAllNotDone() {
-//        try {
-            System.out.println("Marking all items as \"not done\"");
-            for (ToDoItem toDoItem : todoItems) {
-                toDoItem.isDone = false;
-            }
-            todoList.setItems(null);
-            todoList.setItems(todoItems);
-            for (ToDoItem item : todoItems) {
-                myContainerInstance.addToDoItem(item);
-            }
-//            jsonSaveString = jsonSave(myContainerInstance);
-//            saveTDContainer(jsonSaveString);
-//            saveTDContainer(myContainerInstance);
-            writeFile();
-//        } catch (IOException exception) {
-//            exception.printStackTrace();
-//        }
+        System.out.println("Marking all items as \"not done\"");
+        for (ToDoItem toDoItem : todoItems) {
+            toDoItem.isDone = false;
+        }
+        todoList.setItems(null);
+        todoList.setItems(todoItems);
+
+        saveToDisk();
     }
 
     public void toggleAll() {
-//        try {
-            System.out.println("Toggling all...");
-            for (ToDoItem toDoItem : todoItems) {
-                toDoItem.isDone = !toDoItem.isDone;
+        System.out.println("Toggling all...");
+        for (ToDoItem toDoItem : todoItems) {
+            toDoItem.isDone = !toDoItem.isDone;
+        }
+        todoList.setItems(null);
+        todoList.setItems(todoItems);
+
+        saveToDisk();
+    }
+
+//    public String jsonSave(ToDoContainer containerObject) {
+//        JsonSerializer jsonSerializer = new JsonSerializer().deep(true);
+//        String jsonString = jsonSerializer.serialize(containerObject);
+//
+//        return jsonString;
+//    }
+
+//    public ToDoContainer jsonRestore(String jsonTD) {
+//        JsonParser toDoContainerParser = new JsonParser();
+//        ToDoContainer TDContainerObject = toDoContainerParser.parse(jsonTD, ToDoContainer.class);
+//
+//        return TDContainerObject;
+//    }
+
+
+    private void saveToDisk() {
+        ToDoContainer newContainer = new ToDoContainer();
+        newContainer.todoItemsArrayList.clear();
+        for (ToDoItem item : todoItems) {
+            newContainer.todoItemsArrayList.add(item);
+            System.out.println("adding...");
+        }
+
+        JsonSerializer jsonSerializer = new JsonSerializer().deep(true);
+        String jsonString = jsonSerializer.serialize(newContainer);
+
+        try {
+            FileWriter fw = new FileWriter(currentUser + ".json");
+            fw.write(jsonString);
+            fw.flush();
+            fw.close();
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+
+    }
+
+    private void readFromDisk() {
+        try {
+            File userFile = new File(currentUser + ".json");
+            Scanner fileScanner = new Scanner(userFile);
+            String toDoJsonString = fileScanner.nextLine();
+            JsonParser toDoContainerParser = new JsonParser();
+            ToDoContainer toDoContainer = toDoContainerParser.parse(toDoJsonString, ToDoContainer.class);
+            for (ToDoItem item : toDoContainer.todoItemsArrayList) {
+                todoItems.add(item);
             }
-            todoList.setItems(null);
-            todoList.setItems(todoItems);
-            for (ToDoItem item : todoItems) {
-                myContainerInstance.addToDoItem(item);
-            }
-//            jsonSaveString = jsonSave(myContainerInstance);
-//            saveTDContainer(jsonSaveString);
-//            saveTDContainer(myContainerInstance);
-            writeFile();
-//        } catch (IOException exception) {
-//            exception.printStackTrace();
-//        }
+        } catch (FileNotFoundException e) {
+            System.out.println("Did not find file.");
+        }
     }
 
 //    public void printToFile() {
@@ -282,93 +220,5 @@ public class Controller implements Initializable {
 //        }
 //    }
 
-
-    public void saveTDContainer(ToDoContainer container) throws IOException {
-        FileOutputStream fos = new FileOutputStream(currentUser + ".json");
-        ObjectOutput objectOut = new ObjectOutputStream(fos);
-        objectOut.writeObject(container);
-        objectOut.flush();
-    }
-
-//    public void saveTDContainer(String jsonString) throws IOException {
-//        FileOutputStream fos = new FileOutputStream(MY_DATA_FILE);
-//        ObjectOutput objectOut = new ObjectOutputStream(fos);
-//        objectOut.writeObject(jsonString);
-//        objectOut.flush();
-//    }
-
-    public ToDoContainer restoreTDContainer() throws IOException, ClassNotFoundException {
-        FileInputStream fis = new FileInputStream(currentUser + ".json");
-        ObjectInputStream objectIn = new ObjectInputStream(fis);
-        ToDoContainer restoredTDContainerObject = (ToDoContainer)objectIn.readObject();
-
-        return restoredTDContainerObject;
-    }
-
-//    public String restoreTDContainer() throws IOException, ClassNotFoundException {
-////        FileInputStream fis = new FileInputStream(currentUser + ".json");
-//        BufferedReader in = new BufferedReader(new FileReader(currentUser + ".json"));
-//        try {
-//            StringBuilder sb = new StringBuilder();
-//            String line = in.readLine();
-//
-//            while (line != null) {
-//                sb.append(line);
-//                sb.append("\n");
-//                line = in.readLine();
-//            }
-//            return sb.toString();
-//        } finally {
-//            in.close();
-//        }
-//    }
-
-//    public String restoreTDContainer() throws IOException, ClassNotFoundException {
-//        FileInputStream fis = new FileInputStream(MY_DATA_FILE);
-//        ObjectInputStream objectIn = new ObjectInputStream(fis);
-//        String restoredTDContainerObject = (String)objectIn.readObject();
-//
-//        return restoredTDContainerObject;
-//    }
-
-    public String jsonSave(ToDoContainer containerObject) {
-        JsonSerializer jsonSerializer = new JsonSerializer().deep(true);
-        String jsonString = jsonSerializer.serialize(containerObject);
-
-        return jsonString;
-    }
-
-    public ToDoContainer jsonRestore(String jsonTD) {
-        //Need a file reader here?
-        JsonParser toDoContainerParser = new JsonParser();
-        ToDoContainer TDContainerObject = toDoContainerParser.parse(jsonTD, ToDoContainer.class);
-
-        return TDContainerObject;
-    }
-
-    public void writeFile() {
-        try {
-            JsonSerializer jsonSerializer = new JsonSerializer().deep(true);
-            String jsonString = jsonSerializer.serialize(myContainerInstance);
-            FileWriter fw = new FileWriter(currentUser + ".json");
-            fw.write(jsonString);
-            fw.flush();
-            fw.close();
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
-    }
-
-    public ToDoContainer readFile() throws IOException, ClassNotFoundException{
-
-        FileInputStream fis = new FileInputStream(currentUser + ".json");
-        ObjectInputStream objectIn = new ObjectInputStream(fis);
-        ToDoContainer restoredTDContainerObject = (ToDoContainer) objectIn.readObject();
-        JsonParser toDoContainerParser = new JsonParser();
-        ToDoContainer TDContainerObject = toDoContainerParser.parse(jsonString, ToDoContainer.class);
-        return TDContainerObject;
-
-
-    }
 }
 
