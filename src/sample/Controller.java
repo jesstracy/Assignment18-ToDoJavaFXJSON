@@ -35,7 +35,6 @@ public class Controller implements Initializable {
 
     String jsonString;
 
-
     class ToDoContainer {
 
         ArrayList<ToDoItem> todoItemsArrayList = new ArrayList<ToDoItem>();
@@ -77,13 +76,18 @@ public class Controller implements Initializable {
 //                FileInputStream fis = new FileInputStream(userFile);
 //                ObjectInputStream objectIn = new ObjectInputStream(fis);
 //                toDoItemsArrayList = (ArrayList<ToDoItem>)objectIn.readObject();
-                String jsonString = restoreTDContainer();
-                myContainerInstance = jsonRestore(jsonString);
+
+
+                // *****************************************************************************
+//                String jsonString = restoreTDContainer();
+//                myContainerInstance = jsonRestore(jsonString);
+                myContainerInstance = restoreTDContainer();
                 for (ToDoItem item : myContainerInstance.getTodoItemsArrayList()) {
 //                for (ToDoItem item : toDoItemsArrayList) {
                     todoItems.add(item);
                 }
                 System.out.println(todoItems);
+                // ******************************************************************************
 //                FileReader myFileReader = new FileReader(userFile);
 //                String jsonLine = myFileReader.read();
 //                JsonParser toDoContainerParser = new JsonParser();
@@ -293,31 +297,31 @@ public class Controller implements Initializable {
 //        objectOut.flush();
 //    }
 
-//    public ToDoContainer restoreTDContainer() throws IOException, ClassNotFoundException {
-//        FileInputStream fis = new FileInputStream(currentUser + ".json");
-//        ObjectInputStream objectIn = new ObjectInputStream(fis);
-//        ToDoContainer restoredTDContainerObject = (ToDoContainer)objectIn.readObject();
-//
-//        return restoredTDContainerObject;
-//    }
+    public ToDoContainer restoreTDContainer() throws IOException, ClassNotFoundException {
+        FileInputStream fis = new FileInputStream(currentUser + ".json");
+        ObjectInputStream objectIn = new ObjectInputStream(fis);
+        ToDoContainer restoredTDContainerObject = (ToDoContainer)objectIn.readObject();
 
-    public String restoreTDContainer() throws IOException, ClassNotFoundException {
-//        FileInputStream fis = new FileInputStream(currentUser + ".json");
-        BufferedReader in = new BufferedReader(new FileReader(currentUser + ".json"));
-        try {
-            StringBuilder sb = new StringBuilder();
-            String line = in.readLine();
-
-            while (line != null) {
-                sb.append(line);
-                sb.append("\n");
-                line = in.readLine();
-            }
-            return sb.toString();
-        } finally {
-            in.close();
-        }
+        return restoredTDContainerObject;
     }
+
+//    public String restoreTDContainer() throws IOException, ClassNotFoundException {
+////        FileInputStream fis = new FileInputStream(currentUser + ".json");
+//        BufferedReader in = new BufferedReader(new FileReader(currentUser + ".json"));
+//        try {
+//            StringBuilder sb = new StringBuilder();
+//            String line = in.readLine();
+//
+//            while (line != null) {
+//                sb.append(line);
+//                sb.append("\n");
+//                line = in.readLine();
+//            }
+//            return sb.toString();
+//        } finally {
+//            in.close();
+//        }
+//    }
 
 //    public String restoreTDContainer() throws IOException, ClassNotFoundException {
 //        FileInputStream fis = new FileInputStream(MY_DATA_FILE);
