@@ -31,7 +31,7 @@ public class Controller implements Initializable {
     ObservableList<ToDoItem> todoItems = FXCollections.observableArrayList();
     ToDoContainer myContainerInstance = new ToDoContainer();
 
-    private String currentUser;
+    private String currentUser = "Jessica";
 
     String jsonString;
 
@@ -67,9 +67,9 @@ public class Controller implements Initializable {
 //        }
 
         Scanner myScanner = new Scanner(System.in);
-        String userName = askForUserName(myScanner);
+        currentUser = askForUserName(myScanner);
 
-        File userFile = new File(userName + ".json");
+        File userFile = new File(currentUser + ".json");
         if (userFile.exists()) {
             try {
 //                ArrayList<ToDoItem> toDoItemsArrayList = new ArrayList<ToDoItem>();
@@ -77,9 +77,10 @@ public class Controller implements Initializable {
 //                FileInputStream fis = new FileInputStream(userFile);
 //                ObjectInputStream objectIn = new ObjectInputStream(fis);
 //                toDoItemsArrayList = (ArrayList<ToDoItem>)objectIn.readObject();
-                jsonString = restoreTDContainer();
+                String jsonString = restoreTDContainer();
                 myContainerInstance = jsonRestore(jsonString);
                 for (ToDoItem item : myContainerInstance.getTodoItemsArrayList()) {
+//                for (ToDoItem item : toDoItemsArrayList) {
                     todoItems.add(item);
                 }
                 System.out.println(todoItems);
@@ -111,7 +112,7 @@ public class Controller implements Initializable {
 //            myUser = new User(userName);
 //            users.add(myUser);
 //        }
-        currentUser = userName;
+//        currentUser = userName;
         todoList.setItems(todoItems);
     }
 
@@ -155,7 +156,7 @@ public class Controller implements Initializable {
     }
 
     public void removeItem() {
-        try {
+//        try {
             ToDoItem todoItem = (ToDoItem) todoList.getSelectionModel().getSelectedItem();
             System.out.println("Removing " + todoItem.text + " ...");
             todoItems.remove(todoItem);
@@ -166,13 +167,13 @@ public class Controller implements Initializable {
 //            saveTDContainer(jsonSaveString);
 //            saveTDContainer(myContainerInstance);
             writeFile();
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
+//        } catch (IOException exception) {
+//            exception.printStackTrace();
+//        }
     }
 
     public void toggleItem() {
-        try {
+//        try {
             System.out.println("Toggling item ...");
             ToDoItem todoItem = (ToDoItem) todoList.getSelectionModel().getSelectedItem();
             if (todoItem != null) {
@@ -187,13 +188,13 @@ public class Controller implements Initializable {
 //            saveTDContainer(jsonSaveString);
 //            saveTDContainer(myContainerInstance);
             writeFile();
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
+//        } catch (IOException exception) {
+//            exception.printStackTrace();
+//        }
     }
 
     public void markAllDone() {
-        try {
+//        try {
             System.out.println("Marking all items as \"done\"");
             for (ToDoItem toDoItem : todoItems) {
                 toDoItem.isDone = true;
@@ -207,13 +208,13 @@ public class Controller implements Initializable {
 //            saveTDContainer(jsonSaveString);
 //            saveTDContainer(myContainerInstance);
             writeFile();
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
+//        } catch (IOException exception) {
+//            exception.printStackTrace();
+//        }
     }
 
     public void markAllNotDone() {
-        try {
+//        try {
             System.out.println("Marking all items as \"not done\"");
             for (ToDoItem toDoItem : todoItems) {
                 toDoItem.isDone = false;
@@ -227,13 +228,13 @@ public class Controller implements Initializable {
 //            saveTDContainer(jsonSaveString);
 //            saveTDContainer(myContainerInstance);
             writeFile();
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
+//        } catch (IOException exception) {
+//            exception.printStackTrace();
+//        }
     }
 
     public void toggleAll() {
-        try {
+//        try {
             System.out.println("Toggling all...");
             for (ToDoItem toDoItem : todoItems) {
                 toDoItem.isDone = !toDoItem.isDone;
@@ -247,9 +248,9 @@ public class Controller implements Initializable {
 //            saveTDContainer(jsonSaveString);
 //            saveTDContainer(myContainerInstance);
             writeFile();
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
+//        } catch (IOException exception) {
+//            exception.printStackTrace();
+//        }
     }
 
 //    public void printToFile() {
@@ -344,8 +345,7 @@ public class Controller implements Initializable {
     public void writeFile() {
         try {
             JsonSerializer jsonSerializer = new JsonSerializer().deep(true);
-            // took out String initializer to make it global
-            jsonString = jsonSerializer.serialize(todoItems);
+            String jsonString = jsonSerializer.serialize(todoItems);
             FileWriter fw = new FileWriter(currentUser + ".json");
             fw.write(jsonString);
             fw.flush();
