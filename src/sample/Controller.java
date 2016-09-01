@@ -345,7 +345,7 @@ public class Controller implements Initializable {
     public void writeFile() {
         try {
             JsonSerializer jsonSerializer = new JsonSerializer().deep(true);
-            String jsonString = jsonSerializer.serialize(todoItems);
+            String jsonString = jsonSerializer.serialize(myContainerInstance);
             FileWriter fw = new FileWriter(currentUser + ".json");
             fw.write(jsonString);
             fw.flush();
