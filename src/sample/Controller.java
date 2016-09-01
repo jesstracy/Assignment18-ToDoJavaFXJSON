@@ -31,10 +31,9 @@ public class Controller implements Initializable {
     ObservableList<ToDoItem> todoItems = FXCollections.observableArrayList();
     ToDoContainer myContainerInstance = new ToDoContainer();
 
-    private String currentUser = "Bob";
+    private String currentUser;
 
-    final String MY_DATA_FILE = "todo.json";
-    String jsonSaveString;
+    String jsonString;
 
 
     class ToDoContainer {
@@ -57,19 +56,44 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        try {
+//        try {
             // populate observable list with what we read in from file.
-            populateToDoItemsFromFile();
+//            populateToDoItemsFromFile();
 
-        } catch (ClassNotFoundException exception) {
-            exception.printStackTrace();
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
+//        } catch (ClassNotFoundException exception) {
+//            exception.printStackTrace();
+//        } catch (IOException exception) {
+//            exception.printStackTrace();
+//        }
 
         Scanner myScanner = new Scanner(System.in);
         String userName = askForUserName(myScanner);
 
+        File userFile = new File(userName + ".json");
+        if (userFile.exists()) {
+            try {
+//                ArrayList<ToDoItem> toDoItemsArrayList = new ArrayList<ToDoItem>();
+
+//                FileInputStream fis = new FileInputStream(userFile);
+//                ObjectInputStream objectIn = new ObjectInputStream(fis);
+//                toDoItemsArrayList = (ArrayList<ToDoItem>)objectIn.readObject();
+                jsonString = restoreTDContainer();
+                myContainerInstance = jsonRestore(jsonString);
+                for (ToDoItem item : myContainerInstance.getTodoItemsArrayList()) {
+                    todoItems.add(item);
+                }
+                System.out.println(todoItems);
+//                FileReader myFileReader = new FileReader(userFile);
+//                String jsonLine = myFileReader.read();
+//                JsonParser toDoContainerParser = new JsonParser();
+//                ArrayList<ToDoItem> toDoItemsArrayList = toDoContainerParser.parse(jsonLine, ArrayList.class);
+//                System.out.println(toDoItemsArrayList);
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            } catch (ClassNotFoundException exception) {
+                exception.printStackTrace();
+            }
+        }
 
 //        User myUser = null;
 //        // check if already on list of users
@@ -91,14 +115,14 @@ public class Controller implements Initializable {
         todoList.setItems(todoItems);
     }
 
-    public void populateToDoItemsFromFile() {
-        String jsonTD = restoreTDContainer();
-        myContainerInstance = jsonRestore(jsonTD);
-
-        for (ToDoItem item : myContainerInstance.getTodoItemsArrayList()) {
-            todoItems.add(item);
-        }
-    }
+//    public void populateToDoItemsFromFile() {
+//        String jsonTD = restoreTDContainer();
+//        myContainerInstance = jsonRestore(jsonTD);
+//
+//        for (ToDoItem item : myContainerInstance.getTodoItemsArrayList()) {
+//            todoItems.add(item);
+//        }
+//    }
 
     public String askForUserName(Scanner myScanner) {
         System.out.print("What is your name? ");
@@ -113,7 +137,7 @@ public class Controller implements Initializable {
     }
 
     public void addItem() {
-        try {
+//        try {
             System.out.println("Adding item ...");
             todoItems.add(new ToDoItem(todoText.getText()));
             todoText.setText("");
@@ -121,13 +145,13 @@ public class Controller implements Initializable {
             for (ToDoItem item : todoItems) {
                 myContainerInstance.addToDoItem(item);
             }
-            jsonSaveString = jsonSave(myContainerInstance);
-            saveTDContainer(jsonSaveString);
+//            jsonSaveString = jsonSave(myContainerInstance);
+//            saveTDContainer(jsonSaveString);
 //            saveTDContainer(myContainerInstance);
             writeFile();
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
+//        } catch (IOException exception) {
+//            exception.printStackTrace();
+//        }
     }
 
     public void removeItem() {
@@ -138,9 +162,10 @@ public class Controller implements Initializable {
             for (ToDoItem item : todoItems) {
                 myContainerInstance.addToDoItem(item);
             }
-            jsonSaveString = jsonSave(myContainerInstance);
-            saveTDContainer(jsonSaveString);
+//            jsonSaveString = jsonSave(myContainerInstance);
+//            saveTDContainer(jsonSaveString);
 //            saveTDContainer(myContainerInstance);
+            writeFile();
         } catch (IOException exception) {
             exception.printStackTrace();
         }
@@ -158,9 +183,10 @@ public class Controller implements Initializable {
             for (ToDoItem item : todoItems) {
                 myContainerInstance.addToDoItem(item);
             }
-            jsonSaveString = jsonSave(myContainerInstance);
-            saveTDContainer(jsonSaveString);
+//            jsonSaveString = jsonSave(myContainerInstance);
+//            saveTDContainer(jsonSaveString);
 //            saveTDContainer(myContainerInstance);
+            writeFile();
         } catch (IOException exception) {
             exception.printStackTrace();
         }
@@ -177,9 +203,10 @@ public class Controller implements Initializable {
             for (ToDoItem item : todoItems) {
                 myContainerInstance.addToDoItem(item);
             }
-            jsonSaveString = jsonSave(myContainerInstance);
-            saveTDContainer(jsonSaveString);
+//            jsonSaveString = jsonSave(myContainerInstance);
+//            saveTDContainer(jsonSaveString);
 //            saveTDContainer(myContainerInstance);
+            writeFile();
         } catch (IOException exception) {
             exception.printStackTrace();
         }
@@ -196,9 +223,10 @@ public class Controller implements Initializable {
             for (ToDoItem item : todoItems) {
                 myContainerInstance.addToDoItem(item);
             }
-            jsonSaveString = jsonSave(myContainerInstance);
-            saveTDContainer(jsonSaveString);
+//            jsonSaveString = jsonSave(myContainerInstance);
+//            saveTDContainer(jsonSaveString);
 //            saveTDContainer(myContainerInstance);
+            writeFile();
         } catch (IOException exception) {
             exception.printStackTrace();
         }
@@ -215,9 +243,10 @@ public class Controller implements Initializable {
             for (ToDoItem item : todoItems) {
                 myContainerInstance.addToDoItem(item);
             }
-            jsonSaveString = jsonSave(myContainerInstance);
-            saveTDContainer(jsonSaveString);
+//            jsonSaveString = jsonSave(myContainerInstance);
+//            saveTDContainer(jsonSaveString);
 //            saveTDContainer(myContainerInstance);
+            writeFile();
         } catch (IOException exception) {
             exception.printStackTrace();
         }
@@ -249,22 +278,22 @@ public class Controller implements Initializable {
 //    }
 
 
-//    public void saveTDContainer(ToDoContainer container) throws IOException {
-//        FileOutputStream fos = new FileOutputStream(MY_DATA_FILE);
-//        ObjectOutput objectOut = new ObjectOutputStream(fos);
-//        objectOut.writeObject(container);
-//        objectOut.flush();
-//    }
-
-    public void saveTDContainer(String jsonString) throws IOException {
-        FileOutputStream fos = new FileOutputStream(MY_DATA_FILE);
+    public void saveTDContainer(ToDoContainer container) throws IOException {
+        FileOutputStream fos = new FileOutputStream(currentUser + ".json");
         ObjectOutput objectOut = new ObjectOutputStream(fos);
-        objectOut.writeObject(jsonString);
+        objectOut.writeObject(container);
         objectOut.flush();
     }
 
+//    public void saveTDContainer(String jsonString) throws IOException {
+//        FileOutputStream fos = new FileOutputStream(MY_DATA_FILE);
+//        ObjectOutput objectOut = new ObjectOutputStream(fos);
+//        objectOut.writeObject(jsonString);
+//        objectOut.flush();
+//    }
+
 //    public ToDoContainer restoreTDContainer() throws IOException, ClassNotFoundException {
-//        FileInputStream fis = new FileInputStream(MY_DATA_FILE);
+//        FileInputStream fis = new FileInputStream(currentUser + ".json");
 //        ObjectInputStream objectIn = new ObjectInputStream(fis);
 //        ToDoContainer restoredTDContainerObject = (ToDoContainer)objectIn.readObject();
 //
@@ -272,12 +301,30 @@ public class Controller implements Initializable {
 //    }
 
     public String restoreTDContainer() throws IOException, ClassNotFoundException {
-        FileInputStream fis = new FileInputStream(MY_DATA_FILE);
-        ObjectInputStream objectIn = new ObjectInputStream(fis);
-        String restoredTDContainerObject = (String)objectIn.readObject();
+//        FileInputStream fis = new FileInputStream(currentUser + ".json");
+        BufferedReader in = new BufferedReader(new FileReader(currentUser + ".json"));
+        try {
+            StringBuilder sb = new StringBuilder();
+            String line = in.readLine();
 
-        return restoredTDContainerObject;
+            while (line != null) {
+                sb.append(line);
+                sb.append("\n");
+                line = in.readLine();
+            }
+            return sb.toString();
+        } finally {
+            in.close();
+        }
     }
+
+//    public String restoreTDContainer() throws IOException, ClassNotFoundException {
+//        FileInputStream fis = new FileInputStream(MY_DATA_FILE);
+//        ObjectInputStream objectIn = new ObjectInputStream(fis);
+//        String restoredTDContainerObject = (String)objectIn.readObject();
+//
+//        return restoredTDContainerObject;
+//    }
 
     public String jsonSave(ToDoContainer containerObject) {
         JsonSerializer jsonSerializer = new JsonSerializer().deep(true);
@@ -294,10 +341,11 @@ public class Controller implements Initializable {
         return TDContainerObject;
     }
 
-    private void writeFile() {
+    public void writeFile() {
         try {
             JsonSerializer jsonSerializer = new JsonSerializer().deep(true);
-            String jsonString = jsonSerializer.serialize(todoItems);
+            // took out String initializer to make it global
+            jsonString = jsonSerializer.serialize(todoItems);
             FileWriter fw = new FileWriter(currentUser + ".json");
             fw.write(jsonString);
             fw.flush();
@@ -305,6 +353,18 @@ public class Controller implements Initializable {
         } catch (IOException exception) {
             exception.printStackTrace();
         }
+    }
+
+    public ToDoContainer readFile() throws IOException, ClassNotFoundException{
+
+        FileInputStream fis = new FileInputStream(currentUser + ".json");
+        ObjectInputStream objectIn = new ObjectInputStream(fis);
+        ToDoContainer restoredTDContainerObject = (ToDoContainer) objectIn.readObject();
+        JsonParser toDoContainerParser = new JsonParser();
+        ToDoContainer TDContainerObject = toDoContainerParser.parse(jsonString, ToDoContainer.class);
+        return TDContainerObject;
+
+
     }
 }
 
